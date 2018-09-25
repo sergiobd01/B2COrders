@@ -60,11 +60,11 @@ public class Orders {
 		this.idOrder = idOrder;
 	}
 
-	public Long getIdState() {
+	public Long getIdStateOrder() {
 		return idStateOrder;
 	}
 
-	public void setIdState(Long idState) {
+	public void setIdStateOrder(Long idState) {
 		this.idStateOrder = idState;
 	}
 
