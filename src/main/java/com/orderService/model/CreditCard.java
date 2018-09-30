@@ -9,23 +9,23 @@ public class CreditCard {
 	
 	private int expirationYear;
 	
-	private long numberCard;
+	private Long numberCard;
 	
 
 
-	public CreditCard(long numberCard, String cvv, int expirationMonth, int expirationYear) {
+	public CreditCard(Long numberCard, String cvv, int expirationMonth, int expirationYear) {
 		this.numberCard = numberCard;
 		this.cvv = cvv;
 		this.expirationMonth = expirationMonth;
 		this.expirationYear = expirationYear;
 	}
 
-	public long getNumberCard() {
+	public Long getNumberCard() {
 		return numberCard;
 	}
 
 
-	public void setNumberCard(long numberCard) {
+	public void setNumberCard(Long numberCard) {
 		this.numberCard = numberCard;
 	}
 
