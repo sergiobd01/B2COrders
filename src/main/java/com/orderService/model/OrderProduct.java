@@ -17,7 +17,7 @@ public class OrderProduct {
 	private Long idOrderProduct;
 	
 	@Column(name = "IDPRODUCT")
-	private Long idProduct;
+	private Long id;
 	
 	@Column(name = "IDORDER")
 	private Long idOrder;
@@ -29,10 +29,10 @@ public class OrderProduct {
 		
 	}
 
-	public OrderProduct(Long idOrderProduct, Long idProduct, Long idOrder, int quantity) {
+	public OrderProduct(Long idOrderProduct, Long id, Long idOrder, int quantity) {
 		super();
 		this.idOrderProduct = idOrderProduct;
-		this.idProduct = idProduct;
+		this.id = id;
 		this.idOrder = idOrder;
 		this.quantity = quantity;
 	}
@@ -45,12 +45,12 @@ public class OrderProduct {
 		this.idOrderProduct = idOrderProduct;
 	}
 
-	public Long getIdProduct() {
-		return idProduct;
+	public Long getId() {
+		return id;
 	}
 
-	public void setIdProduct(Long idProduct) {
-		this.idProduct = idProduct;
+	public void setId(Long idProduct) {
+		this.id = idProduct;
 	}
 
 	public Long getIdOrder() {
