@@ -61,7 +61,16 @@ public class OrderController {
         	
             orderResponse.setMessage("Orden Registrada");
             orderResponse.setSuccess(true);
-          	
+            
+            // TODO call BPEL SERVICE
+            // Creacion interface y implementacion de interface
+            // importar clases con CXF, utilizando wsdl
+            // crear folder de wsdl bpel en resources
+          	// crear Repository con la tabla de proveedores para traer el id y la URL del servicio
+            // hacer mapper del servicio ; response del servicio OK
+            // config del servicio para consumo
+            // propiedades de consumo en application.properties
+        
         }
         else
         {
@@ -96,7 +105,9 @@ public class OrderController {
     	orderResult.setIdStateOrder(3L);
         orderRepository.save(orderResult);
         orderResponse.setMessage("Orden Cancelada");
-        orderResponse.setSuccess(true);      	
+        orderResponse.setSuccess(true);   
+        
+        // TODO call BPEL SERVICE
     }
     else
     {
