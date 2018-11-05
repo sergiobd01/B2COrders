@@ -7,10 +7,10 @@ import org.springframework.ws.soap.client.core.SoapActionCallback;
 
 public class ConnectionSoap extends WebServiceGatewaySupport {
 
-	@Value("${adl.ws.hostname}")
+	@Value("${bpel.ws.hostname}")
     private String hostname;
 
-	@Value("${adl.ws.callbackHostname}")
+	@Value("${bpel.ws.callbackHostname}")
 	private String callbackHostname;
 
 	@SuppressWarnings("unchecked")

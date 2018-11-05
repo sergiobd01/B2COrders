@@ -11,8 +11,7 @@ public class WebServiceClientConfig {
 	@Bean
 	public Jaxb2Marshaller marshaller() {
 		final Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
-		marshaller.setContextPaths("co.com.touresbalon.model.canonical._1_0",
-				"com.oracle.xmlns.touresbalon.toures_sca.bpelprocess");
+		marshaller.setContextPaths("co.com.touresbalon.model.canonical._1_0");
 		return marshaller;
 	}
 
