@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import com.orderService.config.ConnectionSoap;
 import com.orderService.interfaces.IOrderConsumer;
@@ -11,6 +12,7 @@ import com.orderService.interfaces.IOrderConsumer;
 import co.com.touresbalon.model.canonical._1_0.CreateSalesOrderRequest;
 import co.com.touresbalon.model.canonical._1_0.CreateSalesOrderResponse;
 
+@Component
 public class OrderConsumer implements IOrderConsumer{
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(OrderConsumer.class);
@@ -18,10 +20,10 @@ public class OrderConsumer implements IOrderConsumer{
 	@Autowired
 	private ConnectionSoap connectionSoap;
 	
-	@Value("${adl.endpoint.uri}")
+	@Value("${bpel.endpoint.createorder.uri}")
 	private String endpointCreateOrderService;
 
-	@Value("${adl.endpoint.method}")
+	@Value("${bpel.endpoint.createorder.method}")
 	private String createOrderServiceMethod;
 
 	@Override
