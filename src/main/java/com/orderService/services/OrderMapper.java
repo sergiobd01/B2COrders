@@ -31,21 +31,24 @@ public class OrderMapper implements IOrderMapper {
 		salesOrder.setIdCustomer(createOrderRequest.getIdCustomer());
 		salesOrder.setCustomerUserName(createOrderRequest.getCustomerUserName());
 		salesOrder.setCustomerEmail(createOrderRequest.getCustomerEmail());
-		salesOrder.setCustomerType(CustomerType.fromValue(createOrderRequest.getCustomerType()));
+		salesOrder.setCustomerType(createOrderRequest.getCustomerType().equals(CustomerType.GOLD) ? CustomerType.GOLD
+				: createOrderRequest.getCustomerType().equals(CustomerType.PLATINUM) ? CustomerType.PLATINUM
+						: CustomerType.SILVER);
 		salesOrder.setCreditCardNumber(createOrderRequest.getCreditCardNumber());
 		salesOrder.setPrice(BigDecimal.valueOf(createOrderRequest.getPrice()));
 		salesOrder.getItems().addAll(buildItemsToSend(createOrderRequest));
+		createSalesOrderRequest.setOrder(salesOrder);
 		return createSalesOrderRequest;
 	}
-	
+
 	private List<Item> buildItemsToSend(CreateOrderRequest createOrderRequest) {
 		List<Item> itemsList = new ArrayList<>();
-		for (Items item :createOrderRequest.getItems()){
+		for (Items item : createOrderRequest.getItems()) {
 			Item itemObj = new Item();
 			itemObj.setItemId(item.getItemId());
 			itemObj.setItemName(item.getItemName());
 			itemObj.setItemDescriptions(item.getItemDescriptions());
-			Transport transport = new Transport() ;
+			Transport transport = new Transport();
 			transport.setId(item.getTransportType());
 			itemObj.setTransportType(transport);
 			Spectacle spectacle = new Spectacle();
@@ -74,7 +77,7 @@ public class OrderMapper implements IOrderMapper {
 		createOrderResponse.setPrice(createSalesOrderResponse.getPrice().doubleValue());
 		return createOrderResponse;
 	}
-	
+
 	// TODO falta mapear lo de cancelacion
 
 }

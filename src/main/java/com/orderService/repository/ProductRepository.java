@@ -12,6 +12,6 @@ import com.orderService.model.Product;
 public interface ProductRepository extends JpaRepository<Product, Long> {
 	
 	@Query("SELECT t FROM Product t where t.idProduct = :idProduct")
-    public Product findById(@Param("idProduct") int idProduct);
+    public Product findById(@Param("idProduct") long idProduct);
 
 }

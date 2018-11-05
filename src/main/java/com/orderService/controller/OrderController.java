@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.orderService.dto.CreateOrderRequest;
@@ -134,6 +135,7 @@ public class OrderController {
 	}
 
 	private CreateOrderResponse buildRequestToBPEL(Orders orderToSend, List<OrderProduct> orderProducts) {
+		LOGGER.info("entre al BPEL");
 		CreateOrderRequest request = new CreateOrderRequest();
 
 		Optional<Customer> customer = customerRepository.findById(orderToSend.getIdCustomer());
@@ -146,7 +148,7 @@ public class OrderController {
 		request.setPrice(orderToSend.getAmount());
 		List<Items> itemsList = new ArrayList<>();
 		for (OrderProduct orderProduct : orderProducts) {
-			Product product = productRepository.findById(orderProduct.getId().intValue());
+			Product product = productRepository.findById((long)orderProduct.getId());
 			itemsList.add(buildItemForProduct(product, orderProduct));
 		}
 		request.setItems(itemsList);
