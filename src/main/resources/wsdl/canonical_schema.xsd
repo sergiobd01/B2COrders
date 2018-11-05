@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://touresbalon.com.co/model/canonical/1.0.0" 
+	xmlns:tns="http://touresbalon.com.co/model/canonical/1.0.0">
+
+	<!-- ================================================================= -->
+	<!-- SOA ENTITY MODEL -->
+	<!-- List of entities participating in the soa services -->
+	<!-- ================================================================= -->
+
+	<xs:complexType name="SalesOrder">
+		<xs:sequence>
+			<xs:element name="SalesOrderId" type="xs:string" minOccurs="0"/>
+			<xs:element name="idCustomer" type="xs:string" minOccurs="0"/>
+			<xs:element name="customerUserName" type="xs:string" minOccurs="0"/>
+			<xs:element name="customerEmail" type="xs:string" minOccurs="0"/>
+			<xs:element name="customerType" type="tns:customerType"/>
+			<xs:element name="creditCardNumber" type="xs:string"/>
+			<xs:element name="price" type="xs:decimal" minOccurs="0"/>
+			<xs:element name="items" type="tns:Item" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="Item">
+		<xs:sequence>
+			<xs:element name="itemId" type="xs:long"/>
+			<xs:element name="itemName" type="xs:string" minOccurs="0"/>
+			<xs:element name="itemDescriptions" type="xs:string" minOccurs="0"/>
+			<xs:element name="transportType" type="tns:Transport" minOccurs="0"/>
+			<xs:element name="spectacleType" type="tns:Spectacle" minOccurs="0"/>
+			<xs:element name="lodgingType" type="tns:Lodging" minOccurs="0"/>
+			<xs:element name="arrivalDate" type="xs:string"/>
+			<xs:element name="departureDate" type="xs:string"/>
+			<xs:element name="sourceCity" type="xs:string"/>
+			<xs:element name="targetCity" type="xs:string"/>
+			<xs:element name="price" type="xs:decimal" minOccurs="0"/>
+			<xs:element name="quantity" type="xs:long"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="Transport">
+		<xs:sequence>
+			<xs:element name="id" type="xs:long"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="Spectacle">
+		<xs:sequence>
+			<xs:element name="id" type="xs:long"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="Lodging">
+		<xs:sequence>
+			<xs:element name="id" type="xs:long"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="TransportReservation">
+		<xs:sequence>
+			<xs:element name="available" type="xs:boolean"/>
+			<xs:element name="travelNumber" type="xs:string"/>
+			<xs:element name="chairNumber" type="xs:string"/>
+			<xs:element name="travelDate" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="LodgingReservation">
+		<xs:sequence>
+			<xs:element name="available" type="xs:boolean"/>
+			<xs:element name="roomNumber" type="xs:string"/>
+			<xs:element name="lodgingId" type="xs:string"/>
+			<xs:element name="lodgingDate" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="SpectacleReservation">
+		<xs:sequence>
+			<xs:element name="available" type="xs:boolean"/>
+			<xs:element name="ticketNumber" type="xs:string"/>
+			<xs:element name="spectacleId" type="xs:string"/>
+			<xs:element name="spectacleDate" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- ================================================================= -->
+	<!-- CONSTANTS -->
+	<!-- ================================================================= -->
+
+	<xs:simpleType name="orderStatus" final="restriction">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="IN_VALIDATION"/>
+			<xs:enumeration value="IN_BOOKING"/>
+			<xs:enumeration value="CLOSED"/>
+			<xs:enumeration value="REJECTED"/>
+			<xs:enumeration value="CANCELED"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="transportProvider" final="restriction">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="AVIANCA"/>
+			<xs:enumeration value="AMERICAN_AIRLINES"/>
+			<xs:enumeration value="BOLIVARIANO"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="lodgindProvider" final="restriction">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="HILTON"/>
+			<xs:enumeration value="DANN_CARLTON"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="customerType" final="restriction">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="PLATINUM"/>
+			<xs:enumeration value="GOLD"/>
+			<xs:enumeration value="SILVER"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<!-- ================================================================= -->
+	<!-- XML MESSAGES -->
+	<!-- List of xml element messages referenced from wsdl contracts -->
+	<!-- ================================================================= -->
+
+	<xs:element name="CreateSalesOrderRequest">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="order" type="tns:SalesOrder"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="CreateSalesOrderResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="salesOrderId" type="xs:string" minOccurs="0"/>
+				<xs:element name="salesOrderStatus" type="xs:string"/>
+				<xs:element name="salesOrderCreationDate" type="xs:string"/>
+				<xs:element name="price" type="xs:decimal"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="ApprovalOrderRequest">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="price" type="xs:decimal"/>
+				<xs:element name="customerType" type="tns:customerType"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+		<xs:element name="ApprovalOrderResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="result" type="xs:boolean"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+
+</xs:schema>
