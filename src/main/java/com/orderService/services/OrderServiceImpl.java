@@ -3,14 +3,16 @@ package com.orderService.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.orderService.dto.CancelOrderRequest;
-import com.orderService.dto.CancelOrderResponse;
+import com.orderService.dto.CancelOrderRq;
+import com.orderService.dto.CancelOrderRs;
 import com.orderService.dto.CreateOrderRequest;
 import com.orderService.dto.CreateOrderResponse;
 import com.orderService.interfaces.IOrderConsumer;
 import com.orderService.interfaces.IOrderMapper;
 import com.orderService.interfaces.IOrderService;
 
+import co.com.touresbalon.model.canonical._1_0.CancelOrderRequest;
+import co.com.touresbalon.model.canonical._1_0.CancelOrderResponse;
 import co.com.touresbalon.model.canonical._1_0.CreateSalesOrderRequest;
 import co.com.touresbalon.model.canonical._1_0.CreateSalesOrderResponse;
 
@@ -33,9 +35,10 @@ public class OrderServiceImpl implements IOrderService {
 	}
 
 	@Override
-	public CancelOrderResponse cancelOrderValidateBPEL(CancelOrderRequest cancelOrderRequest) {
-		// TODO Auto-generated method stub
-		return null;
+	public CancelOrderRs cancelOrderValidateBPEL(CancelOrderRq cancelOrderRequest) {
+		CancelOrderRequest cancelOrderRequestBPEL = orderMapper.buildCancelOrderRequest(cancelOrderRequest);
+		CancelOrderResponse cancelOrderResponse = orderConsumer.consumeCancelOrderValidation(cancelOrderRequestBPEL);
+        return orderMapper.buildCancelOrderResponse(cancelOrderResponse);
 	}
 	
 	

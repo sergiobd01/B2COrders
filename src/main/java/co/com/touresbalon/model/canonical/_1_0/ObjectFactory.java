@@ -54,6 +54,30 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link CancelOrderRequest }
+     * 
+     */
+    public CancelOrderRequest createCancelOrderRequest() {
+        return new CancelOrderRequest();
+    }
+
+    /**
+     * Create an instance of {@link CancelOrder }
+     * 
+     */
+    public CancelOrder createCancelOrder() {
+        return new CancelOrder();
+    }
+
+    /**
+     * Create an instance of {@link CancelOrderResponse }
+     * 
+     */
+    public CancelOrderResponse createCancelOrderResponse() {
+        return new CancelOrderResponse();
+    }
+
+    /**
      * Create an instance of {@link ApprovalOrderRequest }
      * 
      */

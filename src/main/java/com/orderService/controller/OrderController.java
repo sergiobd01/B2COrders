@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.orderService.dto.CancelOrderRq;
+import com.orderService.dto.CancelOrderRs;
 import com.orderService.dto.CreateOrderRequest;
 import com.orderService.dto.CreateOrderResponse;
 import com.orderService.dto.Items;
@@ -126,6 +128,14 @@ public class OrderController {
 			orderResponse.setSuccess(true);
 
 			// TODO call BPEL SERVICE for cancel order
+			
+			CancelOrderRs cancelOrderResponse = buildCancelOrderRequestToBPEL(orderResult,new ArrayList<OrderProduct>());
+			if (cancelOrderResponse != null) {
+				LOGGER.info("status: " + cancelOrderResponse.getCancelrOrderStatus() + " date: "
+						+ cancelOrderResponse.getCancelOrderDate());
+			} else {
+				LOGGER.error("order data not found");
+			}
 		} else {
 			orderResponse.setMessage("La orden no pudo ser cancelada");
 			orderResponse.setSuccess(false);
@@ -135,7 +145,7 @@ public class OrderController {
 	}
 
 	private CreateOrderResponse buildRequestToBPEL(Orders orderToSend, List<OrderProduct> orderProducts) {
-		LOGGER.info("entre al BPEL");
+		LOGGER.info("entre al BPEL creacion");
 		CreateOrderRequest request = new CreateOrderRequest();
 
 		Optional<Customer> customer = customerRepository.findById(orderToSend.getIdCustomer());
@@ -176,6 +186,31 @@ public class OrderController {
 		itemObj.setPrice(Double.valueOf(product.getPrice()));
 		itemObj.setQuantity(Long.valueOf(orderProduct.getQuantity()));
 		return itemObj;
+	}
+	
+	private CancelOrderRs buildCancelOrderRequestToBPEL(Orders orderToSend, List<OrderProduct> orderProducts) {
+		LOGGER.info("entre al BPEL cancelar");
+		CancelOrderRq request = new CancelOrderRq();
+
+		Optional<Customer> customer = customerRepository.findById(orderToSend.getIdCustomer());
+
+		request.setIdCustomer(String.valueOf(orderToSend.getIdCustomer()));
+		request.setCustomerUserName(customer.get().getUserName());
+		request.setCustomerEmail(customer.get().getEmail());
+		request.setCustomerType(String.valueOf(customer.get().getIdCategory()));
+		request.setCreditCardNumber(String.valueOf(orderToSend.getNumberCard()));
+		request.setPrice(orderToSend.getAmount());
+		List<Items> itemsList = new ArrayList<>();
+		for (OrderProduct orderProduct : orderProducts) {
+			Product product = productRepository.findById((long)orderProduct.getId());
+			itemsList.add(buildItemForProduct(product, orderProduct));
+		}
+		request.setItems(itemsList);
+
+		CancelOrderRs cancelOrderResponse = orderService.cancelOrderValidateBPEL(request);
+
+		return cancelOrderResponse;
+
 	}
 
 }

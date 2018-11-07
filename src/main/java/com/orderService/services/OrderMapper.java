@@ -6,11 +6,16 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.orderService.dto.CancelOrderRq;
+import com.orderService.dto.CancelOrderRs;
 import com.orderService.dto.CreateOrderRequest;
 import com.orderService.dto.CreateOrderResponse;
 import com.orderService.dto.Items;
 import com.orderService.interfaces.IOrderMapper;
 
+import co.com.touresbalon.model.canonical._1_0.CancelOrder;
+import co.com.touresbalon.model.canonical._1_0.CancelOrderRequest;
+import co.com.touresbalon.model.canonical._1_0.CancelOrderResponse;
 import co.com.touresbalon.model.canonical._1_0.CreateSalesOrderRequest;
 import co.com.touresbalon.model.canonical._1_0.CreateSalesOrderResponse;
 import co.com.touresbalon.model.canonical._1_0.CustomerType;
@@ -36,12 +41,12 @@ public class OrderMapper implements IOrderMapper {
 						: CustomerType.SILVER);
 		salesOrder.setCreditCardNumber(createOrderRequest.getCreditCardNumber());
 		salesOrder.setPrice(BigDecimal.valueOf(createOrderRequest.getPrice()));
-		salesOrder.getItems().addAll(buildItemsToSend(createOrderRequest));
+		salesOrder.getItems().addAll(buildItemsToSend(createOrderRequest,null));
 		createSalesOrderRequest.setOrder(salesOrder);
 		return createSalesOrderRequest;
 	}
 
-	private List<Item> buildItemsToSend(CreateOrderRequest createOrderRequest) {
+	private List<Item> buildItemsToSend(CreateOrderRequest createOrderRequest, CancelOrderRq cancelOrderRequest) {
 		List<Item> itemsList = new ArrayList<>();
 		for (Items item : createOrderRequest.getItems()) {
 			Item itemObj = new Item();
@@ -78,6 +83,30 @@ public class OrderMapper implements IOrderMapper {
 		return createOrderResponse;
 	}
 
-	// TODO falta mapear lo de cancelacion
+	@Override
+	public CancelOrderRequest buildCancelOrderRequest(CancelOrderRq cancelOrderRq) {
+		CancelOrderRequest cancelOrderRequest = new CancelOrderRequest();
+		CancelOrder cancelOrder = new CancelOrder();
+		cancelOrder.setSalesOrderId(String.valueOf(System.currentTimeMillis()));
+		cancelOrder.setIdCustomer(cancelOrderRq.getIdCustomer());
+		cancelOrder.setCustomerUserName(cancelOrderRq.getCustomerUserName());
+		cancelOrder.setCustomerEmail(cancelOrderRq.getCustomerEmail());
+		cancelOrder.setCustomerType(cancelOrderRq.getCustomerType().equals(CustomerType.GOLD) ? CustomerType.GOLD
+				: cancelOrderRq.getCustomerType().equals(CustomerType.PLATINUM) ? CustomerType.PLATINUM
+						: CustomerType.SILVER);
+		cancelOrder.setCreditCardNumber(cancelOrderRq.getCreditCardNumber());
+		cancelOrder.setPrice(BigDecimal.valueOf(cancelOrderRq.getPrice()));
+		cancelOrder.getItems().addAll(buildItemsToSend(null,cancelOrderRq));
+		cancelOrderRequest.setOrder(cancelOrder);
+		return cancelOrderRequest;
+	}
+
+	@Override
+	public CancelOrderRs buildCancelOrderResponse(CancelOrderResponse cancelOrderResponse) {
+		CancelOrderRs cancelOrderRs = new CancelOrderRs();
+		cancelOrderRs.setCancelOrderDate(cancelOrderResponse.getCancelOrderDate());
+		cancelOrderRs.setCancelrOrderStatus(cancelOrderResponse.getCancelrOrderStatus());
+		return cancelOrderRs;
+	}
 
 }
