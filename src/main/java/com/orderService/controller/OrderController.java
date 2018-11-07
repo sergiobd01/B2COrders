@@ -9,6 +9,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -127,9 +128,10 @@ public class OrderController {
 			orderResponse.setMessage("Orden Cancelada");
 			orderResponse.setSuccess(true);
 
+			List<OrderProduct> orderProducts = orderProductRepository.findAll(sortByIdAsc());
 			// TODO call BPEL SERVICE for cancel order
-			
-			CancelOrderRs cancelOrderResponse = buildCancelOrderRequestToBPEL(orderResult,new ArrayList<OrderProduct>());
+
+			CancelOrderRs cancelOrderResponse = buildCancelOrderRequestToBPEL(orderResult, orderProducts);
 			if (cancelOrderResponse != null) {
 				LOGGER.info("status: " + cancelOrderResponse.getCancelrOrderStatus() + " date: "
 						+ cancelOrderResponse.getCancelOrderDate());
@@ -142,6 +144,10 @@ public class OrderController {
 		}
 
 		return ResponseEntity.ok(orderResponse);
+	}
+
+	private Sort sortByIdAsc() {
+		return new Sort(Sort.Direction.ASC, "idOrderProduct");
 	}
 
 	private CreateOrderResponse buildRequestToBPEL(Orders orderToSend, List<OrderProduct> orderProducts) {
@@ -158,7 +164,7 @@ public class OrderController {
 		request.setPrice(orderToSend.getAmount());
 		List<Items> itemsList = new ArrayList<>();
 		for (OrderProduct orderProduct : orderProducts) {
-			Product product = productRepository.findById((long)orderProduct.getId());
+			Product product = productRepository.findById((long) orderProduct.getId());
 			itemsList.add(buildItemForProduct(product, orderProduct));
 		}
 		request.setItems(itemsList);
@@ -187,7 +193,7 @@ public class OrderController {
 		itemObj.setQuantity(Long.valueOf(orderProduct.getQuantity()));
 		return itemObj;
 	}
-	
+
 	private CancelOrderRs buildCancelOrderRequestToBPEL(Orders orderToSend, List<OrderProduct> orderProducts) {
 		LOGGER.info("entre al BPEL cancelar");
 		CancelOrderRq request = new CancelOrderRq();
@@ -202,7 +208,7 @@ public class OrderController {
 		request.setPrice(orderToSend.getAmount());
 		List<Items> itemsList = new ArrayList<>();
 		for (OrderProduct orderProduct : orderProducts) {
-			Product product = productRepository.findById((long)orderProduct.getId());
+			Product product = productRepository.findById((long) orderProduct.getId());
 			itemsList.add(buildItemForProduct(product, orderProduct));
 		}
 		request.setItems(itemsList);
